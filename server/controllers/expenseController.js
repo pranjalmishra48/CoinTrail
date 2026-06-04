@@ -4,21 +4,29 @@ const {
   getAllExpenses,
   createExpense,
   updateExpense,
-  deleteExpense
+  deleteExpense,
+  getSummary
 } = require("../models/expenseModel");
 
 const getExpenses = async (req, res) => {
   try {
-    const expenses = await getAllExpenses();
+    const { category, startDate, endDate } = req.query;
+
+    const expenses = await getAllExpenses({
+      category,
+      startDate,
+      endDate
+    });
 
     res.status(200).json({
       success: true,
-      data: expenses,
+      data: expenses
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -122,9 +130,30 @@ const removeExpense = async (req, res) => {
   }
 };
 
+const fetchSummary = async (req, res) => {
+  try {
+
+    const summary = await getSummary();
+
+    res.json({
+      success: true,
+      data: summary
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+};
+
 module.exports = {
   getExpenses,
   addExpense,
   editExpense,
-  removeExpense
+  removeExpense,
+  fetchSummary
 };

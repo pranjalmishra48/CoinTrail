@@ -4,10 +4,13 @@ const {
   getExpenses,
   addExpense,
   editExpense,
-  removeExpense
+  removeExpense,
+  fetchSummary
 } = require("../controllers/expenseController");
 
 const router = express.Router();
+
+router.get("/summary", fetchSummary);
 
 router.get("/", getExpenses);
 
