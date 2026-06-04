@@ -1,28 +1,80 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import API from "../services/expenseApi";
 
-function ExpenseForm({ onExpenseAdded }) {
+function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
   } = useForm();
 
+  useEffect(() => {
+  if (editingExpense) {
+    setValue(
+      "amount",
+      editingExpense.amount
+    );
+
+    setValue(
+      "category",
+      editingExpense.category
+    );
+
+    setValue(
+      "date",
+      editingExpense.date
+    );
+
+    setValue(
+      "note",
+      editingExpense.note
+    );
+  }
+}, [editingExpense, setValue]);
+
   const onSubmit = async (data) => {
-    try {
-      await API.post("/expenses", data);
+  try {
 
-      toast.success("Expense Added");
+    if (editingExpense) {
 
-      reset();
+      await API.put(
+        `/expenses/${editingExpense.id}`,
+        data
+      );
 
-      onExpenseAdded();
+      toast.success(
+        "Expense Updated"
+      );
+
+      clearEditing();
+
+    } else {
+
+      await API.post(
+        "/expenses",
+        data
+      );
+
+      toast.success(
+        "Expense Added"
+      );
+    }
+
+    reset();
+
+    onExpenseAdded();
 
     } catch (error) {
-      toast.error("Failed to add expense");
-      console.error(error);
+
+    toast.error(
+      "Operation Failed"
+    );
+
+    console.error(error);
     }
   };
 
@@ -30,7 +82,7 @@ function ExpenseForm({ onExpenseAdded }) {
     <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
 
       <h2 className="text-xl font-semibold mb-4">
-        Add Expense
+        {editingExpense ? "Edit Expense" : "Add New Expense"}
       </h2>
 
       <form
@@ -105,7 +157,7 @@ function ExpenseForm({ onExpenseAdded }) {
           transition
           "
         >
-          Add Expense
+          { editingExpense ? "Update Expense" : "Add Expense"}
         </button>
 
       </form>

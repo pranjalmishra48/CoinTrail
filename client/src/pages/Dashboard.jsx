@@ -3,15 +3,24 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import SummaryCards from "../components/SummaryCards";
 import ExpenseForm from "../components/ExpenseForm";
+import ExpenseTable from "../components/ExpenseTable";
 
 import API from "../services/expenseApi";
 
 function Dashboard() {
 
   const [summary, setSummary] = useState(null);
+  const [expenses, setExpenses] =useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const clearEditing = () => {setEditingExpense(null);
+};
+  const handleEdit = (expense) => {
+  setEditingExpense(expense);
+  };
 
   useEffect(() => {
     fetchSummary();
+    fetchExpenses();
   }, []);
 
   const fetchSummary = async () => {
@@ -27,6 +36,37 @@ function Dashboard() {
     }
   };
 
+  const fetchExpenses = async () => {
+  try {
+
+    const response =
+      await API.get("/expenses");
+
+    setExpenses(
+      response.data.data
+    );
+
+    } catch (error) {
+    console.error(error);
+  }
+  };
+
+  const deleteExpense = async (
+  id) => {
+   try {
+
+    await API.delete(
+      `/expenses/${id}`
+    );
+
+    fetchSummary();
+    fetchExpenses();
+
+   } catch (error) {
+    console.error(error);
+   }
+   };
+
   return (
     <>
       <Navbar />
@@ -41,7 +81,18 @@ function Dashboard() {
           summary={summary}
         />
 
-        <ExpenseForm onExpenseAdded={fetchSummary} />
+        <ExpenseForm onExpenseAdded={() => {
+          fetchSummary();
+          fetchExpenses();
+          }}
+
+          editingExpense={editingExpense}
+          clearEditing={clearEditing}
+         />
+
+        <ExpenseTable expenses={expenses}
+          onDelete={deleteExpense}
+          onEdit={handleEdit}/>
 
       </div>
     </>
