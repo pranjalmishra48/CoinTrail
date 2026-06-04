@@ -5,7 +5,7 @@ import SummaryCards from "../components/SummaryCards";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseTable from "../components/ExpenseTable";
 import FilterPanel from "../components/FilterPanel";
-import ExpenseChart from "../components/ExpenseChart";
+import ExpenseChart from "../components/Expensechart";
 import BudgetForm from "../components/BudgetForm";
 import BudgetIndicator from "../components/BudgetIndicator";
 
