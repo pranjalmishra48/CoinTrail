@@ -6,23 +6,33 @@ import ExpenseForm from "../components/ExpenseForm";
 import ExpenseTable from "../components/ExpenseTable";
 import FilterPanel from "../components/FilterPanel";
 import ExpenseChart from "../components/ExpenseChart";
+import BudgetForm from "../components/BudgetForm";
+import BudgetIndicator from "../components/BudgetIndicator";
 
 import API from "../services/expenseApi";
 
 function Dashboard() {
 
   const [summary, setSummary] = useState(null);
+
   const [expenses, setExpenses] =useState([]);
+
   const [editingExpense, setEditingExpense] = useState(null);
-  const clearEditing = () => {setEditingExpense(null);
-};
+
+  const [budgets, setBudgets] = useState([]);
+
+  const clearEditing = () => {
+    setEditingExpense(null);
+  };
+  
   const handleEdit = (expense) => {
-  setEditingExpense(expense);
+    setEditingExpense(expense);
   };
 
   useEffect(() => {
     fetchSummary();
     fetchExpenses();
+    fetchBudgets();
   }, []);
 
   const fetchSummary = async () => {
@@ -94,6 +104,15 @@ function Dashboard() {
     }
   };
 
+  const fetchBudgets = async () => {
+   try { const response =
+    await API.get("/budgets");
+    setBudgets(response.data.data);
+    } catch (error) {
+    console.error(error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -109,6 +128,11 @@ function Dashboard() {
         />
 
         <ExpenseChart summary={summary} />
+
+        <BudgetForm onBudgetSaved={fetchBudgets}/>
+
+        <BudgetIndicator budgets={budgets} 
+          summary={summary}/>
 
         <FilterPanel onFilter={applyFilters}/>
 
