@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar";
 import SummaryCards from "../components/SummaryCards";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseTable from "../components/ExpenseTable";
+import FilterPanel from "../components/FilterPanel";
+import ExpenseChart from "../components/ExpenseChart";
 
 import API from "../services/expenseApi";
 
@@ -65,7 +67,32 @@ function Dashboard() {
    } catch (error) {
     console.error(error);
    }
-   };
+  };
+
+  const applyFilters = async (filters) => {
+    try {
+      let query =
+      "/expenses?";
+
+    if (filters.category) {
+      query += `category=${filters.category}&`;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      query +=
+        `startDate=${filters.startDate}&endDate=${filters.endDate}`;
+    }
+
+    const response = await API.get(query);
+
+    setExpenses( response.data.data);
+
+    } catch (error) {
+
+    console.error(error);
+
+    }
+  };
 
   return (
     <>
@@ -80,6 +107,10 @@ function Dashboard() {
         <SummaryCards
           summary={summary}
         />
+
+        <ExpenseChart summary={summary} />
+
+        <FilterPanel onFilter={applyFilters}/>
 
         <ExpenseForm onExpenseAdded={() => {
           fetchSummary();
