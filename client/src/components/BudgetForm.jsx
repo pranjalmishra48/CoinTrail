@@ -38,7 +38,7 @@ function BudgetForm({ onBudgetSaved }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
+    <div className="bg-white rounded-2xl shadow-sm p-5">
 
       <h2 className="text-xl font-semibold mb-4">
         Set Budget

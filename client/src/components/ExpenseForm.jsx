@@ -1,10 +1,15 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FaPlusCircle, FaEdit } from "react-icons/fa";
 
 import API from "../services/expenseApi";
 
-function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
+function ExpenseForm({
+  onExpenseAdded,
+  editingExpense,
+  clearEditing,
+}) {
   const {
     register,
     handleSubmit,
@@ -13,77 +18,83 @@ function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
   } = useForm();
 
   useEffect(() => {
-  if (editingExpense) {
-    setValue(
-      "amount",
-      editingExpense.amount
-    );
-
-    setValue(
-      "category",
-      editingExpense.category
-    );
-
-    setValue(
-      "date",
-      editingExpense.date
-    );
-
-    setValue(
-      "note",
-      editingExpense.note
-    );
-  }
-}, [editingExpense, setValue]);
+    if (editingExpense) {
+      setValue("amount", editingExpense.amount);
+      setValue("category", editingExpense.category);
+      setValue("date", editingExpense.date);
+      setValue("note", editingExpense.note);
+    }
+  }, [editingExpense, setValue]);
 
   const onSubmit = async (data) => {
-  try {
+    try {
+      if (editingExpense) {
+        await API.put(
+          `/expenses/${editingExpense.id}`,
+          data
+        );
 
-    if (editingExpense) {
+        toast.success(
+          "Expense Updated Successfully"
+        );
 
-      await API.put(
-        `/expenses/${editingExpense.id}`,
-        data
-      );
+        clearEditing();
+      } else {
+        await API.post(
+          "/expenses",
+          data
+        );
 
-      toast.success(
-        "Expense Updated"
-      );
+        toast.success(
+          "Expense Added Successfully"
+        );
+      }
 
-      clearEditing();
-
-    } else {
-
-      await API.post(
-        "/expenses",
-        data
-      );
-
-      toast.success(
-        "Expense Added"
-      );
-    }
-
-    reset();
-
-    onExpenseAdded();
+      reset();
+      onExpenseAdded();
 
     } catch (error) {
 
-    toast.error(
-      "Operation Failed"
-    );
+      toast.error(
+        "Operation Failed"
+      );
 
-    console.error(error);
+      console.error(error);
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
+    <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
 
-      <h2 className="text-xl font-semibold mb-4">
-        {editingExpense ? "Edit Expense" : "Add New Expense"}
-      </h2>
+      <div className="flex items-center gap-3 mb-6">
+
+        {editingExpense ? (
+          <FaEdit
+            className="text-amber-500"
+            size={24}
+          />
+        ) : (
+          <FaPlusCircle
+            className="text-blue-600"
+            size={24}
+          />
+        )}
+
+        <div>
+          <h2 className="text-2xl font-bold">
+            {editingExpense
+              ? "Edit Expense"
+              : "Add New Expense"}
+          </h2>
+
+          <p className="text-sm text-gray-500">
+            {editingExpense
+              ? "Update expense details"
+              : "Record a new expense"}
+          </p>
+        </div>
+
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -92,8 +103,17 @@ function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
 
         <input
           type="number"
-          placeholder="Amount"
-          className="border rounded-lg p-3"
+          placeholder="Enter Amount"
+          className="
+          border
+          border-gray-300
+          rounded-xl
+          p-3
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          transition
+          "
           {...register("amount", {
             required: true,
             min: 1,
@@ -101,7 +121,16 @@ function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
         />
 
         <select
-          className="border rounded-lg p-3"
+          className="
+          border
+          border-gray-300
+          rounded-xl
+          p-3
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          transition
+          "
           {...register("category", {
             required: true,
           })}
@@ -111,29 +140,38 @@ function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
           </option>
 
           <option value="Food">
-            Food
+            🍔 Food
           </option>
 
           <option value="Transport">
-            Transport
+            🚗 Transport
           </option>
 
           <option value="Bills">
-            Bills
+            📄 Bills
           </option>
 
           <option value="Entertainment">
-            Entertainment
+            🎬 Entertainment
           </option>
 
           <option value="Other">
-            Other
+            📦 Other
           </option>
         </select>
 
         <input
           type="date"
-          className="border rounded-lg p-3"
+          className="
+          border
+          border-gray-300
+          rounded-xl
+          p-3
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          transition
+          "
           {...register("date", {
             required: true,
           })}
@@ -141,26 +179,67 @@ function ExpenseForm({onExpenseAdded, editingExpense, clearEditing,}) {
 
         <input
           type="text"
-          placeholder="Note"
-          className="border rounded-lg p-3"
+          placeholder="Add a note (optional)"
+          className="
+          border
+          border-gray-300
+          rounded-xl
+          p-3
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+          transition
+          "
           {...register("note")}
         />
 
-        <button
-          type="submit"
-          className="
-          bg-blue-600
-          text-white
-          rounded-lg
-          p-3
-          hover:bg-blue-700
-          transition
-          "
-        >
-          { editingExpense ? "Update Expense" : "Add Expense"}
-        </button>
+        <div className="md:col-span-2 flex gap-3">
+
+          <button
+            type="submit"
+            className="
+            bg-blue-600
+            hover:bg-blue-700
+            text-white
+            font-medium
+            px-6
+            py-3
+            rounded-xl
+            shadow-sm
+            transition
+            "
+          >
+            {editingExpense
+              ? "Update Expense"
+              : "Add Expense"}
+          </button>
+
+          {editingExpense && (
+            <button
+              type="button"
+              onClick={() => {
+                clearEditing();
+                reset();
+              }}
+              className="
+              bg-gray-200
+              hover:bg-gray-300
+              text-gray-700
+              font-medium
+              px-6
+              py-3
+              rounded-xl
+              transition
+              "
+            >
+              Cancel
+            </button>
+          )}
+
+        </div>
 
       </form>
+
     </div>
   );
 }

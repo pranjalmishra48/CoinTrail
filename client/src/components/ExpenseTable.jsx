@@ -7,59 +7,88 @@ function ExpenseTable({
 }) {
   if (!expenses.length) {
     return (
-      <div className="bg-white p-6 rounded-xl shadow-sm text-center">
-        <h3 className="text-lg font-semibold">
-          No Expenses Found
+      <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+
+        <div className="text-6xl mb-4">
+          📭
+        </div>
+
+        <h3 className="text-2xl font-bold text-gray-800">
+          No Expenses Yet
         </h3>
 
-        <p className="text-gray-500 mt-2">
-          Add your first expense.
+        <p className="text-gray-500 mt-3">
+          Add your first expense to start tracking.
         </p>
+
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
-      <div className="flex justify-between items-center p-4 border-b">
+      {/* Header */}
+      <div className="flex justify-between items-center p-5 border-b">
 
-        <h2 className="text-xl font-semibold">
-           Expenses
-        </h2>
+        <div>
+          <h2 className="text-xl font-bold">
+            Expense History
+          </h2>
 
-         <button onClick={() => exportToCsv(expenses)} className=" bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 ">
-            Export CSV
-         </button>
+          <p className="text-sm text-gray-500">
+            View and manage all recorded expenses
+          </p>
+        </div>
+
+        <button
+          onClick={() => exportToCsv(expenses)}
+          className="
+          bg-green-600
+          hover:bg-green-700
+          text-white
+          font-medium
+          px-4
+          py-2
+          rounded-xl
+          shadow-sm
+          transition
+          "
+        >
+          Export CSV
+        </button>
 
       </div>
 
+      {/* Table */}
       <div className="overflow-x-auto">
 
         <table className="w-full">
 
-          <thead className="bg-gray-100">
+          <thead className="bg-slate-50">
 
             <tr>
-              <th className="p-4 text-left">
+
+              <th className="p-4 text-left font-semibold text-gray-600 uppercase text-sm">
                 Date
               </th>
 
-              <th className="p-4 text-left">
+              <th className="p-4 text-left font-semibold text-gray-600 uppercase text-sm">
                 Category
               </th>
 
-              <th className="p-4 text-left">
+              <th className="p-4 text-left font-semibold text-gray-600 uppercase text-sm">
                 Amount
               </th>
 
-              <th className="p-4 text-left">
+              <th className="p-4 text-left font-semibold text-gray-600 uppercase text-sm">
                 Note
               </th>
 
-              <th className="p-4 text-left">
+              <th className="p-4 text-left font-semibold text-gray-600 uppercase text-sm">
                 Actions
               </th>
+
             </tr>
 
           </thead>
@@ -69,17 +98,37 @@ function ExpenseTable({
             {expenses.map((expense) => (
               <tr
                 key={expense.id}
-                className="border-t"
+                className="
+                border-t
+                hover:bg-slate-50
+                transition-all
+                duration-200
+                "
               >
-                <td className="p-4">
+
+                <td className="p-4 text-gray-700">
                   {expense.date}
                 </td>
 
                 <td className="p-4">
-                  {expense.category}
+
+                  <span
+                    className="
+                    bg-blue-100
+                    text-blue-700
+                    px-3
+                    py-1
+                    rounded-full
+                    text-sm
+                    font-medium
+                    "
+                  >
+                    {expense.category}
+                  </span>
+
                 </td>
 
-                <td className="p-4 font-semibold">
+                <td className="p-4 font-bold text-green-600">
                   {new Intl.NumberFormat(
                     "en-IN",
                     {
@@ -89,8 +138,8 @@ function ExpenseTable({
                   ).format(expense.amount)}
                 </td>
 
-                <td className="p-4">
-                  {expense.note}
+                <td className="p-4 text-gray-600">
+                  {expense.note || "-"}
                 </td>
 
                 <td className="p-4 flex gap-2">
@@ -100,11 +149,14 @@ function ExpenseTable({
                       onEdit(expense)
                     }
                     className="
-                    bg-yellow-500
+                    bg-amber-500
+                    hover:bg-amber-600
                     text-white
-                    px-3
-                    py-1
-                    rounded
+                    px-4
+                    py-2
+                    rounded-lg
+                    font-medium
+                    transition
                     "
                   >
                     Edit
@@ -116,16 +168,20 @@ function ExpenseTable({
                     }
                     className="
                     bg-red-500
+                    hover:bg-red-600
                     text-white
-                    px-3
-                    py-1
-                    rounded
+                    px-4
+                    py-2
+                    rounded-lg
+                    font-medium
+                    transition
                     "
                   >
                     Delete
                   </button>
 
                 </td>
+
               </tr>
             ))}
 
