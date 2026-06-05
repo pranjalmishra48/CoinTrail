@@ -160,7 +160,7 @@ function ExpenseTable({
                       onDelete(expense.id);
                     }
                     }}
-                    className="bg-red-500hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
                       <FaTrash />
                        Delete
                   </button>
