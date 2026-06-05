@@ -1,4 +1,5 @@
 import { exportToCsv } from "../utils/exportCsv";
+import { FaEdit, FaTrash,} from "react-icons/fa";
 
 function ExpenseTable({
   expenses,
@@ -144,40 +145,24 @@ function ExpenseTable({
 
                 <td className="p-4 flex gap-2">
 
-                  <button
-                    onClick={() =>
+                  <button onClick={() =>
                       onEdit(expense)
                     }
-                    className="
-                    bg-amber-500
-                    hover:bg-amber-600
-                    text-white
-                    px-4
-                    py-2
-                    rounded-lg
-                    font-medium
-                    transition
-                    "
-                  >
+                    className=" bg-amber-500hover: bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition ">
+                      <FaEdit />
                     Edit
                   </button>
 
-                  <button
-                    onClick={() =>
-                      onDelete(expense.id)
+                  <button onClick={() => {
+                    const confirmed = window.confirm("Are you sure you want to delete this expense?");
+
+                    if (confirmed) {
+                      onDelete(expense.id);
                     }
-                    className="
-                    bg-red-500
-                    hover:bg-red-600
-                    text-white
-                    px-4
-                    py-2
-                    rounded-lg
-                    font-medium
-                    transition
-                    "
-                  >
-                    Delete
+                    }}
+                    className="bg-red-500hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
+                      <FaTrash />
+                       Delete
                   </button>
 
                 </td>
